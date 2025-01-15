@@ -36,7 +36,7 @@ let adderDigitSix = new fourBitHolder();
 let adderDigitSeven = new fourBitHolder();
 let adderDigitEight = new fourBitHolder();
 
-let digitSelector = new digitSelectorClass();
+const digitSelector = new digitSelectorClass();
 
 const threeBitToDecimal = (bitOne: boolean, bitTwo: boolean, bitThree: boolean) => {
     return (bitOne ? 1 : 0) + (bitTwo ? 2 : 0) + (bitThree ? 4 : 0);

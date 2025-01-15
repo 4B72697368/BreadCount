@@ -23,7 +23,7 @@ const BCDConversion = (a: boolean, b: boolean, c: boolean, d: boolean) => {
     let new_d = false;
     new_d = orGate(andGate(add_six.sum4, notBCD(a, b, c, d)), andGate(d, notGate(notBCD(a, b, c, d))));
 
-    let carry = andGate(add_six.carry, notBCD(a, b, c, d));
+    const carry = andGate(add_six.carry, notBCD(a, b, c, d));
 
     return { new_a, new_b, new_c, new_d, carry };
 }
