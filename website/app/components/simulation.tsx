@@ -1,9 +1,11 @@
 "use client"
 import React, { useState } from "react";
+import { ChevronDown } from "lucide-react"
+
+import { digitSelector as digitSelectorClass } from "./logic/digitSelector";
+import { addition } from './logic/addition';
 
 import { fourBitHolder } from './memory/fourBitHolder';
-
-import { addition } from './logic/addition';
 
 import { zero } from './buttons/zero';
 import { one } from './buttons/one';
@@ -15,8 +17,6 @@ import { six } from './buttons/six';
 import { seven } from './buttons/seven';
 import { eight } from './buttons/eight';
 import { nine } from './buttons/nine';
-
-import { digitSelector as digitSelectorClass } from "./logic/digitSelector";
 
 let digitOne = new fourBitHolder();
 let digitTwo = new fourBitHolder();
@@ -46,7 +46,7 @@ const fourBitToDecimal = (bitOne: boolean, bitTwo: boolean, bitThree: boolean, b
     return (bitOne ? 1 : 0) + (bitTwo ? 2 : 0) + (bitThree ? 4 : 0) + (bitFour ? 8 : 0);
 }
 
-export default function Home() {
+function Simulation() {
     const [stateDigitOne, setDigitOne] = useState<number>(0);
     const [stateDigitTwo, setDigitTwo] = useState<number>(0);
     const [stateDigitThree, setDigitThree] = useState<number>(0);
@@ -64,27 +64,11 @@ export default function Home() {
     const [stateAdderDigitSeven, setAdderDigitSeven] = useState<number>(0);
     const [stateAdderDigitEight, setAdderDigitEight] = useState<number>(0);
     const [stateDigitSelector, setDigitSelector] = useState<number>(0);
+    const [activeTab, setActiveTab] = useState('calculator')
 
     const add = () => {
-        console.log(adderDigitOne);
-        console.log(adderDigitTwo);
-        console.log(adderDigitThree);
-        console.log(adderDigitFour);
-        console.log(adderDigitFive);
-        console.log(adderDigitSix);
-        console.log(adderDigitSeven);
-        console.log(adderDigitEight);
-        console.log(digitOne);
-        console.log(digitTwo);
-        console.log(digitThree);
-        console.log(digitFour);
-        console.log(digitFive);
-        console.log(digitSix);
-        console.log(digitSeven);
-        console.log(digitEight);
-        
         const sum = addition(adderDigitOne, adderDigitTwo, adderDigitThree, adderDigitFour, adderDigitFive, adderDigitSix, adderDigitSeven, adderDigitEight, digitOne, digitTwo, digitThree, digitFour, digitFive, digitSix, digitSeven, digitEight);
-        
+
         digitOne = sum.b1;
         digitTwo = sum.b2;
         digitThree = sum.b3;
@@ -93,7 +77,7 @@ export default function Home() {
         digitSix = sum.b6;
         digitSeven = sum.b7;
         digitEight = sum.b8;
-        
+
         setDigitOne(fourBitToDecimal(sum.b1.LatchOne.value, sum.b1.LatchTwo.value, sum.b1.LatchThree.value, sum.b1.LatchFour.value));
         setDigitTwo(fourBitToDecimal(sum.b2.LatchOne.value, sum.b2.LatchTwo.value, sum.b2.LatchThree.value, sum.b2.LatchFour.value));
         setDigitThree(fourBitToDecimal(sum.b3.LatchOne.value, sum.b3.LatchTwo.value, sum.b3.LatchThree.value, sum.b3.LatchFour.value));
@@ -105,18 +89,18 @@ export default function Home() {
     }
 
     const left = () => {
-        digitSelector.decrement();
+        digitSelector.increment();
         setDigitSelector(threeBitToDecimal(digitSelector.bitOne, digitSelector.bitTwo, digitSelector.bitThree));
     }
 
     const right = () => {
-        digitSelector.increment();
+        digitSelector.decrement();
         setDigitSelector(threeBitToDecimal(digitSelector.bitOne, digitSelector.bitTwo, digitSelector.bitThree));
     }
 
     const handleKeypad = (number: number) => {
         const newDigit = new fourBitHolder();
-    
+
         switch (number) {
             case 0:
                 zero(newDigit);
@@ -149,7 +133,7 @@ export default function Home() {
                 nine(newDigit);
                 break;
         }
-    
+
         switch (stateDigitSelector) {
             case 0:
                 adderDigitOne = newDigit;
@@ -184,58 +168,262 @@ export default function Home() {
                 setAdderDigitEight(fourBitToDecimal(newDigit.LatchOne.value, newDigit.LatchTwo.value, newDigit.LatchThree.value, newDigit.LatchFour.value));
                 break
         }
-    }    
+    }
 
-    return (
-        <div>
-            <div className="flex flex-row">
-                <div className="flex flex-col">
-                    <div className="flex flex-col">
-                        <div>
-                            {stateDigitOne}
-                            {stateDigitTwo}
-                            {stateDigitThree}
-                            {stateDigitFour}
-                            {stateDigitFive}
-                            {stateDigitSix}
-                            {stateDigitSeven}
+    const Calculator = () => {
+        return (
+            <div className="flex items-center justify-center">
+                <div className="bg-gray-800 p-8 rounded-3xl shadow-2xl w-96 shadow-2xl">
+                    <div className="mb-6 space-y-2">
+                        <div className="bg-green-800 rounded-xl p-4 text-right text-3xl font-mono text-white h-16 flex items-center justify-end">
                             {stateDigitEight}
+                            {stateDigitSeven}
+                            {stateDigitSix}
+                            {stateDigitFive}
+                            {stateDigitFour}
+                            {stateDigitThree}
+                            {stateDigitTwo}
+                            {stateDigitOne}
                         </div>
-                        <div>
-                            {stateAdderDigitOne}
-                            {stateAdderDigitTwo}
-                            {stateAdderDigitThree}
-                            {stateAdderDigitFour}
-                            {stateAdderDigitFive}
-                            {stateAdderDigitSix}
-                            {stateAdderDigitSeven}
-                            {stateAdderDigitEight}
-                        </div>
-
-                        <div className="flex flex-col">
-                            <div className="flex flex-row">
-                                <button onClick={() => handleKeypad(0)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">0</button>
-                                <button onClick={() => handleKeypad(1)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">1</button>
-                                <button onClick={() => handleKeypad(2)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">2</button>
-                                <button onClick={() => handleKeypad(3)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">3</button>
-                                <button onClick={() => handleKeypad(4)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">4</button>
-                                <button onClick={() => handleKeypad(5)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">5</button>
-                                <button onClick={() => handleKeypad(6)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">6</button>
-                                <button onClick={() => handleKeypad(7)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">7</button>
-                                <button onClick={() => handleKeypad(8)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">8</button>
-                                <button onClick={() => handleKeypad(9)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">9</button>
+                        <div className="bg-green-800 rounded-xl p-4 text-right text-3xl font-mono text-white h-16 flex items-center justify-between">
+                            <div className="justify-self-start">Adder</div>
+                            <div>
+                                <span className={`${stateDigitSelector == 7 ? 'text-blue-500' : 'text-white'}`}>{stateAdderDigitEight}</span>
+                                <span className={`${stateDigitSelector == 6 ? 'text-blue-500' : 'text-white'}`}>{stateAdderDigitSeven}</span>
+                                <span className={`${stateDigitSelector == 5 ? 'text-blue-500' : 'text-white'}`}>{stateAdderDigitSix}</span>
+                                <span className={`${stateDigitSelector == 4 ? 'text-blue-500' : 'text-white'}`}>{stateAdderDigitFive}</span>
+                                <span className={`${stateDigitSelector == 3 ? 'text-blue-500' : 'text-white'}`}>{stateAdderDigitFour}</span>
+                                <span className={`${stateDigitSelector == 2 ? 'text-blue-500' : 'text-white'}`}>{stateAdderDigitThree}</span>
+                                <span className={`${stateDigitSelector == 1 ? 'text-blue-500' : 'text-white'}`}>{stateAdderDigitTwo}</span>
+                                <span className={`${stateDigitSelector == 0 ? 'text-blue-500' : 'text-white'}`}>{stateAdderDigitOne}</span>
                             </div>
                         </div>
-                        <div>
-                            <button onClick={() => {left()}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">{"<"}</button>
-                            <button onClick={() => {right()}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">{">"}</button>
+                    </div>
+
+                    <div className="space-y-4">
+                        <div className="grid grid-cols-3 gap-4">
+                            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+                                <button
+                                    key={num}
+                                    onClick={() => handleKeypad(num)}
+                                    className="bg-gray-700 hover:bg-gray-600 text-white text-2xl font-bold py-6 rounded-xl transition-colors"
+                                >
+                                    {num}
+                                </button>
+                            ))}
                         </div>
-                        <div>
-                            <button onClick={() => {add()}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">+</button>
+
+                        <div className="flex justify-center">
+                            <button
+                                onClick={() => handleKeypad(0)}
+                                className="bg-gray-700 hover:bg-gray-600 text-white text-2xl font-bold py-6 w-1/3 rounded-xl transition-colors"
+                            >
+                                0
+                            </button>
+                        </div>
+
+                        <div className="text-xl flex justify-between mt-4">
+                            <button
+                                onClick={left}
+                                className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 w-1/5 rounded-xl transition-colors"
+                            >
+                                {"<"}
+                            </button>
+                            <button
+                                onClick={add}
+                                className="text-2xl bg-green-500 hover:bg-green-400 text-white font-bold py-3 w-3/5 mx-2 rounded-xl transition-colors"
+                            >
+                                +
+                            </button>
+                            <button
+                                onClick={right}
+                                className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 w-1/5 rounded-xl transition-colors"
+                            >
+                                {">"}
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
+        )
+    }
+
+    const Data = () => {
+        const [adderOpen, setAdderOpen] = useState<boolean>(false);
+        const [digitsOpen, setDigitsOpen] = useState<boolean>(false);
+        const [selectorOpen, setSelectorOpen] = useState<boolean>(false);
+        const [openBitHolders, setOpenBitHolders] = useState<Record<string, boolean>>({});
+
+        const toggleBitHolder = (id: string): void => {
+            setOpenBitHolders(prev => ({
+                ...prev,
+                [id]: !prev[id]
+            }));
+        };
+
+        const renderBitHolder = (digit: fourBitHolder, index: number, prefix: string) => {
+            return (
+                <div key={`${prefix}-${index}`} className="w-full">
+                    <button
+                        onClick={() => toggleBitHolder(`${prefix}-${index}`)}
+                        className="flex w-full items-center justify-between rounded-lg bg-gray-700 p-3 text-white hover:bg-gray-600 transition-colors"
+                    >
+                        <span className="text-sm">4-Bit Holder {index}</span>
+                        <ChevronDown className={`h-4 w-4 transition-transform ${openBitHolders[`${prefix}-${index}`] ? 'rotate-180' : ''}`} />
+                    </button>
+
+                    {openBitHolders[`${prefix}-${index}`] && (
+                        <div className="mt-2 space-y-2 pl-4">
+                            <div className="flex items-center justify-between rounded-md bg-gray-700 p-3 text-white">
+                                <span className="text-sm">S/R Latch Bit One:</span>
+                                <span className="font-mono">
+                                    {digit.LatchOne.value ? '1' : '0'}
+                                </span>
+                            </div>
+                            
+                            <div className="flex items-center justify-between rounded-md bg-gray-700 p-3 text-white">
+                                <span className="text-sm">S/R Latch Bit Two:</span>
+                                <span className="font-mono">
+                                    {digit.LatchTwo.value ? '1' : '0'}
+                                </span>
+                            </div>
+                            
+                            <div className="flex items-center justify-between rounded-md bg-gray-700 p-3 text-white">
+                                <span className="text-sm">S/R Latch Bit Three:</span>
+                                <span className="font-mono">
+                                    {digit.LatchThree.value ? '1' : '0'}
+                                </span>
+                            </div>
+                            
+                            <div className="flex items-center justify-between rounded-md bg-gray-700 p-3 text-white">
+                                <span className="text-sm">S/R Latch Bit Four:</span>
+                                <span className="font-mono">
+                                    {digit.LatchFour.value ? '1' : '0'}
+                                </span>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        return (
+            <div className="w-96 space-y-4 p-6 bg-gray-800 shadow-2xl rounded-3xl max-h-[calc(100%-5rem)] overflow-y-auto">
+                <div className="space-y-2">
+                    <button
+                        onClick={() => setAdderOpen(!adderOpen)}
+                        className="flex w-full items-center justify-between rounded-xl bg-blue-600 p-4 text-white hover:bg-blue-500 transition-colors"
+                    >
+                        <span className="text-lg font-semibold">Adder Digits</span>
+                        <ChevronDown className={`h-5 w-5 transition-transform ${adderOpen ? 'rotate-180' : ''}`} />
+                    </button>
+
+                    {adderOpen && (
+                        <div className="space-y-2 pl-4">
+                            {renderBitHolder(adderDigitOne, 1, 'adder')}
+                            {renderBitHolder(adderDigitTwo, 2, 'adder')}
+                            {renderBitHolder(adderDigitThree, 3, 'adder')}
+                            {renderBitHolder(adderDigitFour, 4, 'adder')}
+                            {renderBitHolder(adderDigitFive, 5, 'adder')}
+                            {renderBitHolder(adderDigitSix, 6, 'adder')}
+                            {renderBitHolder(adderDigitSeven, 7, 'adder')}
+                            {renderBitHolder(adderDigitEight, 8, 'adder')}
+                        </div>
+                    )}
+                </div>
+
+                <div className="space-y-2">
+                    <button
+                        onClick={() => setDigitsOpen(!digitsOpen)}
+                        className="flex w-full items-center justify-between rounded-xl bg-green-600 p-4 text-white hover:bg-green-500 transition-colors"
+                    >
+                        <span className="text-lg font-semibold">Digits</span>
+                        <ChevronDown className={`h-5 w-5 transition-transform ${digitsOpen ? 'rotate-180' : ''}`} />
+                    </button>
+
+                    {digitsOpen && (
+                        <div className="space-y-2 pl-4">
+                        <div className="space-y-2 pl-4">
+                            {renderBitHolder(digitOne, 1, 'digit')}
+                            {renderBitHolder(digitTwo, 2, 'digit')}
+                            {renderBitHolder(digitThree, 3, 'digit')}
+                            {renderBitHolder(digitFour, 4, 'digit')}
+                            {renderBitHolder(digitFive, 5, 'digit')}
+                            {renderBitHolder(digitSix, 6, 'digit')}
+                            {renderBitHolder(digitSeven, 7, 'digit')}
+                            {renderBitHolder(digitEight, 8, 'digit')}
+                        </div>
+                        </div>
+                    )}
+                </div>
+
+                <div className="space-y-2">
+                    <button
+                        onClick={() => setSelectorOpen(!selectorOpen)}
+                        className="flex w-full items-center justify-between rounded-xl bg-purple-600 p-4 text-white hover:bg-purple-500 transition-colors"
+                    >
+                        <span className="text-lg font-semibold">Digit Selector</span>
+                        <ChevronDown className={`h-5 w-5 transition-transform ${selectorOpen ? 'rotate-180' : ''}`} />
+                    </button>
+
+                    {selectorOpen && (
+                        <div className="space-y-2 pl-4">
+                            {["One", "Two", "Three"].map(bitNum => (
+                                <div key={bitNum} className="flex items-center justify-between rounded-md bg-gray-700 p-3 text-white">
+                                    <span className="text-sm">S/R Latch Bit {bitNum}:</span>
+                                    <span className="font-mono">
+                                        {bitNum === "One" ? (digitSelector.bitOne ? '1' : '0') :
+                                            bitNum === "Two" ? (digitSelector.bitTwo ? '1' : '0') :
+                                                (digitSelector.bitThree ? '1' : '0')}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </div>
+        );
+    };
+
+    return (
+        <div className="h-screen flex justify-center items-center bg-gray-100 relative">
+            <button
+                onClick={() => setActiveTab('calculator')}
+                className={`
+                absolute right-0 top-4 
+                transition-all duration-300 ease-in-out
+                px-6 py-2 rounded-l-xl
+                flex items-center gap-2 w-32 hover:w-36
+                ${activeTab === 'calculator'
+                        ? 'bg-gray-800 text-white'
+                        : 'bg-gray-600 text-gray-200'
+                    }
+            `}
+            >
+                Calculator
+            </button>
+            <button
+                onClick={() => setActiveTab('data')}
+                className={`
+                absolute right-0 top-[4.5rem]
+                transition-all duration-300 ease-in-out
+                px-6 py-2 rounded-l-xl
+                flex items-center gap-2 w-32 hover:w-36
+                ${activeTab === 'data'
+                        ? 'bg-gray-800 text-white'
+                        : 'bg-gray-600 text-gray-200'
+                    }
+            `}
+            >
+                Data
+            </button>
+
+            <div className="h-screen w-screen flex justify-center items-center">
+                {activeTab === 'calculator' ? <Calculator /> : <Data />}
+            </div>
         </div>
     )
 }
+
+export { Simulation };
+export default Simulation;
