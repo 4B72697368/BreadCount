@@ -14,9 +14,9 @@ It simulates every logical part that would go into a real life breadboard adder,
     
     and a schema that combines these to make a cohesive 8 digit binary-coated decimal adder.
 
-The website that includes a next-js UI contacting the logical components: [github link](https://github.com/4B72697368/BreadCount/tree/main/website/app/components).
+The website includes a next-js UI contacting the logical components: [github link](https://github.com/4B72697368/BreadCount/tree/main/website/app/components).
 
-The website is on [breadcount.vercel.app](https://bread-count.vercel.app/)
+The website is available on [breadcount.vercel.app](https://bread-count.vercel.app/)
 
 ### Notice:
 Even though it appears to be a simple calculator, each addition is cascading through hundreds bit operators.
