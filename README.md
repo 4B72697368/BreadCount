@@ -3,10 +3,15 @@
 BreadCount is designed to resemble a simple base-10 adder/counter, with simulated latches and logic gates.
 
 It simulates every logical part that would go into a real life breadboard adder, like:
+    
     bitHalfAdder,
+    
     bitFullAdder, 
+    
     fourBitAdder, 
+    
     bcdConversion, 
+    
     and a schema that combines these to make a cohesive 8 digit binary-coated decimal adder.
 
 The website that includes a next-js UI contacting the logical components: [github link](https://github.com/4B72697368/BreadCount/tree/main/website/app/components).
